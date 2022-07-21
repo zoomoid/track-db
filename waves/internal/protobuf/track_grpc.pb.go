@@ -4,7 +4,7 @@
 // - protoc             v3.6.1
 // source: internal/protobuf/track.proto
 
-package waveman
+package waves
 
 import (
 	context "context"
@@ -18,86 +18,86 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// WavemanClient is the client API for Waveman service.
+// WavesClient is the client API for Waves service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type WavemanClient interface {
+type WavesClient interface {
 	Waveform(ctx context.Context, in *TrackRequest, opts ...grpc.CallOption) (*TrackResponse, error)
 }
 
-type wavemanClient struct {
+type wavesClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewWavemanClient(cc grpc.ClientConnInterface) WavemanClient {
-	return &wavemanClient{cc}
+func NewWavesClient(cc grpc.ClientConnInterface) WavesClient {
+	return &wavesClient{cc}
 }
 
-func (c *wavemanClient) Waveform(ctx context.Context, in *TrackRequest, opts ...grpc.CallOption) (*TrackResponse, error) {
+func (c *wavesClient) Waveform(ctx context.Context, in *TrackRequest, opts ...grpc.CallOption) (*TrackResponse, error) {
 	out := new(TrackResponse)
-	err := c.cc.Invoke(ctx, "/waveman.Waveman/Waveform", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/waves.Waves/Waveform", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// WavemanServer is the server API for Waveman service.
-// All implementations must embed UnimplementedWavemanServer
+// WavesServer is the server API for Waves service.
+// All implementations must embed UnimplementedWavesServer
 // for forward compatibility
-type WavemanServer interface {
+type WavesServer interface {
 	Waveform(context.Context, *TrackRequest) (*TrackResponse, error)
-	mustEmbedUnimplementedWavemanServer()
+	mustEmbedUnimplementedWavesServer()
 }
 
-// UnimplementedWavemanServer must be embedded to have forward compatible implementations.
-type UnimplementedWavemanServer struct {
+// UnimplementedWavesServer must be embedded to have forward compatible implementations.
+type UnimplementedWavesServer struct {
 }
 
-func (UnimplementedWavemanServer) Waveform(context.Context, *TrackRequest) (*TrackResponse, error) {
+func (UnimplementedWavesServer) Waveform(context.Context, *TrackRequest) (*TrackResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Waveform not implemented")
 }
-func (UnimplementedWavemanServer) mustEmbedUnimplementedWavemanServer() {}
+func (UnimplementedWavesServer) mustEmbedUnimplementedWavesServer() {}
 
-// UnsafeWavemanServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to WavemanServer will
+// UnsafeWavesServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to WavesServer will
 // result in compilation errors.
-type UnsafeWavemanServer interface {
-	mustEmbedUnimplementedWavemanServer()
+type UnsafeWavesServer interface {
+	mustEmbedUnimplementedWavesServer()
 }
 
-func RegisterWavemanServer(s grpc.ServiceRegistrar, srv WavemanServer) {
-	s.RegisterService(&Waveman_ServiceDesc, srv)
+func RegisterWavesServer(s grpc.ServiceRegistrar, srv WavesServer) {
+	s.RegisterService(&Waves_ServiceDesc, srv)
 }
 
-func _Waveman_Waveform_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Waves_Waveform_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(TrackRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(WavemanServer).Waveform(ctx, in)
+		return srv.(WavesServer).Waveform(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/waveman.Waveman/Waveform",
+		FullMethod: "/waves.Waves/Waveform",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(WavemanServer).Waveform(ctx, req.(*TrackRequest))
+		return srv.(WavesServer).Waveform(ctx, req.(*TrackRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// Waveman_ServiceDesc is the grpc.ServiceDesc for Waveman service.
+// Waves_ServiceDesc is the grpc.ServiceDesc for Waves service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var Waveman_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "waveman.Waveman",
-	HandlerType: (*WavemanServer)(nil),
+var Waves_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "waves.Waves",
+	HandlerType: (*WavesServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "Waveform",
-			Handler:    _Waveman_Waveform_Handler,
+			Handler:    _Waves_Waveform_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

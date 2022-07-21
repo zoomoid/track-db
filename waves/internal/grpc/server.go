@@ -15,7 +15,7 @@ import (
 )
 
 type server struct {
-	pb.UnimplementedWavemanServer
+	pb.UnimplementedWavesServer
 }
 
 func (s *server) Waveform(ctx context.Context, in *pb.TrackRequest) (*pb.TrackResponse, error) {
@@ -67,7 +67,7 @@ func StartGRPCServer(port uint16) {
 	}
 
 	s := grpc.NewServer()
-	pb.RegisterWavemanServer(s, &server{})
+	pb.RegisterWavesServer(s, &server{})
 
 	reflection.Register(s)
 	if err := s.Serve(lis); err != nil {
