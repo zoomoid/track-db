@@ -1,0 +1,86 @@
+syntax = "proto3";
+
+package waveman;
+
+option go_package = "github.com/zoomoid/track-db/waveman";
+
+service Waveman {
+  rpc Waveform(TrackRequest) returns (TrackResponse) {}
+}
+
+message TransformerOptions {
+  sint64 chunks = 1;
+  enum Aggregator {
+    DEFAULT_AGGREGATOR = 0;
+    AVG = 1;
+    RAVG = 2;
+    MAX = 3;
+    MS = 4;
+    RMS = 5;
+  }
+  Aggregator aggregator = 2;
+  sint32 precision = 3; // TODO: this then needs range checking in the server to match the precisions supported
+  enum DownsamplingMode {
+    DEFAULT_DOWNSAMPLING = 0;
+    HEAD = 1;
+    CENTER = 2;
+    TAIL = 3;
+    NONE = 4;
+  }
+  DownsamplingMode downsampling = 4;
+}
+
+message BoxOptions {
+  string color = 1; // fill color of the boxes
+  enum Alignment {
+    DEFAULT_ALIGNMENT = 0;
+    CENTER = 1;
+    TOP = 2;
+    BOTTOM = 3;
+  }
+  Alignment alignment = 2;
+  double height = 3;
+  double width = 4;
+  double rounded = 5;
+  double gap = 6;
+}
+message LineOptions { // Message type for the options supported by a line painter
+  enum Interpolation { // Interpolation modes supported by the line painter as enum
+    DEFAULT_INTERPOLATION = 0;
+    FRITSCH_CARLSON = 1;
+    STEFFEN = 2;
+    NONE = 3;
+  }
+  Interpolation interpolation = 1;
+  string fill = 2; // fill color of the path shape as string
+  message Stroke { // nested message type for the stroke properties, as defined in the Go struct
+    string color = 1; // stroke color
+    string width = 2; // stroke width
+  }
+  Stroke stroke = 3;
+  bool inverted = 4;
+  bool closed = 5;
+  double height = 6;
+  double width = 7;
+
+}
+
+message TrackRequest {
+  string id = 1; // the _id of the file inserted into a mongodb gridfs files collection
+  enum PainterType { // Painter type enum
+    BOX = 0;
+    LINE = 1;
+  }
+  PainterType waveform_type = 3;
+  TransformerOptions transformer = 4;
+  oneof painter { // chose either a box or a line painter for the painter options
+    LineOptions line = 5;
+    BoxOptions box = 6;
+  }
+}
+
+message TrackResponse {
+  string id = 1;
+  string svg = 2;
+  bytes samples = 3;
+}
