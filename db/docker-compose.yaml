@@ -1,0 +1,9 @@
+version: '3'
+services:
+  mongodb:
+    image: mongodb:latest
+    volumes:
+      - ./data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: JNVXiqRh4Wso3guVFdeM
