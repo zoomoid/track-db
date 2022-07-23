@@ -22,9 +22,9 @@ func (s *server) Waveform(ctx context.Context, in *pb.TrackRequest) (*pb.TrackRe
 	ro := ConvertProtobufToWavemanSpec(in)
 
 	gridFSCFG := &mongodb.ClientOptions{
-		URI:      viper.GetString("mongo_uri"),
-		Username: viper.GetString("mongo_username"),
-		Password: viper.GetString("mongo_password"),
+		URI:      viper.GetString("mongo-uri"),
+		Username: viper.GetString("mongo-username"),
+		Password: viper.GetString("mongo-password"),
 	}
 
 	gfsClient, err := mongodb.NewGridFSClient(gridFSCFG)
@@ -33,8 +33,8 @@ func (s *server) Waveform(ctx context.Context, in *pb.TrackRequest) (*pb.TrackRe
 	}
 
 	buf, err := gfsClient.
-		DB(viper.GetString("mongo_database")).
-		Collection(viper.GetString("mongo_collection")).
+		DB(viper.GetString("mongo-database")).
+		Collection(viper.GetString("mongo-collection")).
 		DownloadFile(in.GetId())
 
 	if err != nil {
