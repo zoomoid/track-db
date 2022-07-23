@@ -21,7 +21,7 @@ type server struct {
 func (s *server) Waveform(ctx context.Context, in *pb.TrackRequest) (*pb.TrackResponse, error) {
 	ro := ConvertProtobufToWavemanSpec(in)
 
-	gridFSCFG := &mongodb.GridFSClientConfiguration{
+	gridFSCFG := &mongodb.ClientOptions{
 		URI:      viper.GetString("mongo_uri"),
 		Username: viper.GetString("mongo_username"),
 		Password: viper.GetString("mongo_password"),
@@ -70,6 +70,7 @@ func StartGRPCServer(port uint16) {
 	pb.RegisterWavesServer(s, &server{})
 
 	reflection.Register(s)
+	log.Printf("Starting gRPC server on :%d", port)
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}

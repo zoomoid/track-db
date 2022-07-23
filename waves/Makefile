@@ -1,9 +1,9 @@
-PROTOFILES=internal/protobuf/track.proto
+PROTOFILES=../protobuf/waveform.proto
 GOPROTOFILES=$(patsubst %.proto,%.pb.go,$(PROTOFILES))
 
 CLEANFILES+=$(GOPROTOFILES)
 
-$(GOPROTOFILES): $(PROTOFILES)
-	protoc --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative $<
+protobuf: $(PROTOFILES)
+	protoc -I=../protobuf --go_out=./internal/protobuf --go_opt=paths=source_relative --go-grpc_out=./internal/protobuf --go-grpc_opt=paths=source_relative $<
 
 .PHONY: protobuf

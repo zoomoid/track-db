@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.2.0
 // - protoc             v3.6.1
-// source: internal/protobuf/track.proto
+// source: waveform.proto
 
 package waves
 
@@ -101,5 +101,5 @@ var Waves_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "internal/protobuf/track.proto",
+	Metadata: "waveform.proto",
 }

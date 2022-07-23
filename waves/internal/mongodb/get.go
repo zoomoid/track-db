@@ -2,19 +2,15 @@ package mongodb
 
 import (
 	"bytes"
-	"context"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/gridfs"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type GridFSClientConfiguration struct {
-	URI        string
+	ClientOptions
 	db         string
 	collection string
-	Username   string
-	Password   string
 }
 
 type GridFSClient struct {
@@ -25,11 +21,12 @@ type GridFSClient struct {
 	bucket     *gridfs.Bucket
 }
 
-func NewGridFSClient(cfg *GridFSClientConfiguration) (*GridFSClient, error) {
+func NewGridFSClient(cfg *ClientOptions) (*GridFSClient, error) {
 	c := &GridFSClient{
-		c: cfg,
+		c: &GridFSClientConfiguration{},
 	}
-	client, err := c.initializeMongoClient()
+	c.c.ClientOptions = *cfg
+	client, err := c.client()
 	if err != nil {
 		return nil, err
 	}
@@ -66,23 +63,10 @@ func (g *GridFSClient) DownloadFile(id string) (*bytes.Buffer, error) {
 	return &buf, nil
 }
 
-func (g *GridFSClient) initializeMongoClient() (*mongo.Client, error) {
-	var err error
-	var client *mongo.Client
-
-	credentials := options.Credential{
-		AuthMechanism: "SCRAM-SHA-256",
-		Username:      g.c.Username,
-		Password:      g.c.Password,
-	}
-
-	opts := options.Client().
-		ApplyURI(g.c.URI).
-		SetMaxPoolSize(5).
-		SetAuth(credentials)
-
-	if client, err = mongo.Connect(context.Background(), opts); err != nil {
-		return nil, err
-	}
-	return client, nil
+func (g *GridFSClient) client() (*mongo.Client, error) {
+	return initializeMongoClient(&ClientOptions{
+		URI:      g.c.URI,
+		Username: g.c.Username,
+		Password: g.c.Password,
+	})
 }

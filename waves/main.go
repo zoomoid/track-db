@@ -1,9 +1,12 @@
 package main
 
 import (
+	"log"
+
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 	"github.com/zoomoid/track-db/waves/internal/grpc"
+	"github.com/zoomoid/track-db/waves/internal/mongodb"
 )
 
 func init() {
@@ -27,5 +30,15 @@ func init() {
 }
 
 func main() {
+	// before starting any server, probe mongodb for availability, otherwise exit
+	err := mongodb.Probe(&mongodb.ClientOptions{
+		URI:      viper.GetString("mongo_uri"),
+		Username: viper.GetString("mongo_username"),
+		Password: viper.GetString("mongo_password"),
+	}, mongodb.DefaultProbeDuration)
+	if err != nil {
+		log.Fatalf("failed to connect to mongodb: %v", err)
+	}
+
 	grpc.StartGRPCServer(uint16(viper.GetUint32("port")))
 }
