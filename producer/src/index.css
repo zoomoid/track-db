@@ -2,6 +2,7 @@
 @import url("./fonts/inter.css");
 @import url("./fonts/n27.css");
 @import url("./fonts/noway-icons.css");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -18,7 +19,14 @@ body {
   flex-direction: column;
 }
 
-#root {
-  display: flex;
-  flex-grow: 1;
+:root {
+
+  color-scheme: light dark;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
 }
+
